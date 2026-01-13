@@ -8,10 +8,10 @@ set -euo pipefail
 # Usage: ./deploy.sh <environment>
 # Example: ./deploy.sh dev
 
-ENV=${1:-dev}  # default to dev if not provided
+ENV=${1}  # default to dev if not provided
 
 # Map environment to parameter file
-PARAM_FILE="${ENV}.parameters.json"
+PARAM_FILE="${ENV}.bicepparam"
 
 if [[ ! -f "$PARAM_FILE" ]]; then
   echo "Parameter file $PARAM_FILE not found!"
@@ -19,7 +19,7 @@ if [[ ! -f "$PARAM_FILE" ]]; then
 fi
 
 # Choose a location (used only for subscription-level deployment)
-LOCATION="westeurope"
+LOCATION="polandcentral"
 
 # Deploy the Bicep file at subscription scope
 echo "Deploying Bicep to subscription using environment: $ENV"
@@ -27,6 +27,6 @@ az deployment sub create \
     --name "bicep-deployment-$ENV-$(date +%Y%m%d%H%M%S)" \
     --location $LOCATION \
     --template-file main.bicep \
-    --parameters @"$PARAM_FILE"
+    --parameters "$PARAM_FILE"
 
 echo "Deployment completed successfully!"

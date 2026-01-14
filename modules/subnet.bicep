@@ -4,7 +4,7 @@ param subnetPrefix string
 param privateEndpointNetworkPolicies string
 
 // Reference existing VNet
-resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
+resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' existing = {
   name: vnetName
 }
 

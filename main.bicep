@@ -13,6 +13,7 @@ var rgName = 'rg-${orgPrefix}-${env}-${regionSh}'
 var vnetName = 'vnet-${orgPrefix}-${env}-${regionSh}'
 var nsgName = 'nsg-${orgPrefix}-${env}-${regionSh}'
 var networkWatcherName = 'netwatcher-${orgPrefix}-${env}-${regionSh}'
+var WebAppDnsZoneName = 'privatelink.azurewebsites.net'
 
 
 module rgModule './modules/rg.bicep' = {
@@ -84,3 +85,20 @@ module subnetModule './modules/subnet.bicep' = [for s in subnets: {
     vnetModule
   ]
 }]
+
+module privateDns './modules/privateDnsZone.bicep' = {
+  name: 'WebAppPrivateDns'
+  scope: resourceGroup(rgName)
+  params: {
+    zoneName: WebAppDnsZoneName
+    location: 'global'
+    vnetName: vnetModule.outputs.name
+    vnetID: vnetModule.outputs.id
+    autoDnsRegistration: true
+    tags: {
+      Resource: 'Private DNS Zone'
+      PrivateZone: 'privatelink.azurewebsites.net'
+      ...tags
+    }
+  }
+}

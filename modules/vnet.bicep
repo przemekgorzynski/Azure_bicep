@@ -19,7 +19,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
-output vnetId string = vnet.id
-output vnetResource object = vnet
-output vnetName string = vnet.name
-output vnetLocation string = vnet.location
+output id string = vnet.id
+output name string = vnet.name
+output location string = vnet.location

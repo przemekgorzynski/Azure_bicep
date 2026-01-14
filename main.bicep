@@ -8,12 +8,12 @@ param tags object
 param vnetAddressPrefix string
 param nsgSecurityRules array
 param subnets array
+param PrivateDnsZones array
 
 var rgName = 'rg-${orgPrefix}-${env}-${regionSh}'
 var vnetName = 'vnet-${orgPrefix}-${env}-${regionSh}'
 var nsgName = 'nsg-${orgPrefix}-${env}-${regionSh}'
 var networkWatcherName = 'netwatcher-${orgPrefix}-${env}-${regionSh}'
-var WebAppDnsZoneName = 'privatelink.azurewebsites.net'
 
 
 module rgModule './modules/rg.bicep' = {
@@ -86,19 +86,37 @@ module subnetModule './modules/subnet.bicep' = [for s in subnets: {
   ]
 }]
 
-module privateDns './modules/privateDnsZone.bicep' = {
-  name: 'WebAppPrivateDns'
+
+// module privateDns './modules/privateDnsZone.bicep' = [for zone in zones: {
+//   name: 'privateDns-${zone}'
+//   scope: resourceGroup(rgName)
+//   params: {
+//     zoneName: zone
+//     location: 'global'
+//     vnetName: vnetModule.outputs.name
+//     vnetID: vnetModule.outputs.id
+//     autoDnsRegistration: true
+//     tags: {
+//       Resource: 'Private DNS Zone'
+//       PrivateZone: zone
+//       ...tags
+//     }
+//   }
+// }]
+
+module privateDns './modules/privateDnsZone.bicep' = [for zone in PrivateDnsZones: {
+  name: 'privateDns-${zone.name}'  // unique module name
   scope: resourceGroup(rgName)
   params: {
-    zoneName: WebAppDnsZoneName
+    zoneName: zone.name
     location: 'global'
     vnetName: vnetModule.outputs.name
     vnetID: vnetModule.outputs.id
-    autoDnsRegistration: true
-    tags: {
+    autoDnsRegistration: zone.autoRegistration  // <-- now works
+    tags: union(tags, {
       Resource: 'Private DNS Zone'
-      PrivateZone: 'privatelink.azurewebsites.net'
-      ...tags
-    }
+      PrivateZone: zone.name
+    })
   }
-}
+}]
+

@@ -41,3 +41,14 @@ param nsgSecurityRules = [
     }
   }
 ]
+
+param PrivateDnsZones = [
+  {
+    name: 'privatelink.azurewebsites.net'
+    autoRegistration: true
+  }
+  {
+    name: '${orgPrefix}.internal'
+    autoRegistration: false
+  }
+]

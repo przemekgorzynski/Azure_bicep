@@ -10,7 +10,6 @@ param tags = {
   Owner: 'Przemek Gorzynski'
   Env: env
   Organization: 'Gorillabay'
-  Domain: 'gorillabay.org'
 }
 
 param vnetAddressPrefix = '10.0.0.0/16'
@@ -40,5 +39,16 @@ param nsgSecurityRules = [
       sourceAddressPrefix: '*'
       destinationAddressPrefix: '*'
     }
+  }
+]
+
+param PrivateDnsZones = [
+  {
+    name: 'privatelink.azurewebsites.net'
+    autoRegistration: true
+  }
+  {
+    name: '${orgPrefix}.internal'
+    autoRegistration: false
   }
 ]

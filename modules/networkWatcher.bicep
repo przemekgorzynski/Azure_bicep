@@ -2,7 +2,7 @@ param tags object
 param location string
 param networkWatcherName string
 
-resource networkWatcher 'Microsoft.Network/networkWatchers@2023-09-01' = {
+resource networkWatcher 'Microsoft.Network/networkWatchers@2023-11-01' = {
   name: networkWatcherName
   location: location
   tags: tags

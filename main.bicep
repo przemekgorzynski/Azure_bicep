@@ -86,24 +86,6 @@ module subnetModule './modules/subnet.bicep' = [for s in subnets: {
   ]
 }]
 
-
-// module privateDns './modules/privateDnsZone.bicep' = [for zone in zones: {
-//   name: 'privateDns-${zone}'
-//   scope: resourceGroup(rgName)
-//   params: {
-//     zoneName: zone
-//     location: 'global'
-//     vnetName: vnetModule.outputs.name
-//     vnetID: vnetModule.outputs.id
-//     autoDnsRegistration: true
-//     tags: {
-//       Resource: 'Private DNS Zone'
-//       PrivateZone: zone
-//       ...tags
-//     }
-//   }
-// }]
-
 module privateDns './modules/privateDnsZone.bicep' = [for zone in PrivateDnsZones: {
   name: 'privateDns-${zone.name}'  // unique module name
   scope: resourceGroup(rgName)
